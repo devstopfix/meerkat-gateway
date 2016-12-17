@@ -1,2 +1,32 @@
-# meerkat-gateway
-Simple rate limiting API gateway
+# Meerkat Gateway
+
+Simple API Gateway. 
+
+Features to be implemented:
+
+* per-second rate limiting
+* mandatory HTTP headers
+* forbidden HTTP headers
+* JSON threat protection
+* XML threat protection
+
+## Installation
+
+If [available in Hex](https://hex.pm/docs/publish), the package can be installed as:
+
+  1. Add `meerkat_gateway` to your list of dependencies in `mix.exs`:
+
+    ```elixir
+    def deps do
+      [{:meerkat_gateway, "~> 0.1.0"}]
+    end
+    ```
+
+  2. Ensure `meerkat_gateway` is started before your application:
+
+    ```elixir
+    def application do
+      [applications: [:meerkat_gateway]]
+    end
+    ```
+
