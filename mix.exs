@@ -3,7 +3,7 @@ defmodule MeerkatGateway.Mixfile do
 
   def project do
     [app: :meerkat_gateway,
-     version: "0.1.1",
+     version: "0.1.2",
      elixir: "~> 1.3",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
@@ -23,6 +23,7 @@ defmodule MeerkatGateway.Mixfile do
   defp deps do
     [{:cowboy, "~> 1.0.4"},
      {:httpoison, "~> 0.10.0"},
+     {:poison, "~> 3.0"},
      {:credo, "~> 0.5", only: [:dev, :test]},
      {:mix_test_watch, "~> 0.2", only: :dev},
      {:excheck, "~> 0.5", only: :test},
