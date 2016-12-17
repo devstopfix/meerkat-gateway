@@ -3,7 +3,7 @@ defmodule MeerkatGateway.Mixfile do
 
   def project do
     [app: :meerkat_gateway,
-     version: "0.1.0",
+     version: "0.1.1",
      elixir: "~> 1.3",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
@@ -14,11 +14,16 @@ defmodule MeerkatGateway.Mixfile do
   #
   # Type "mix help compile.app" for more information
   def application do
-    [applications: [:logger]]
+    [mod: { Meerkat.Server, []},
+     applications: [:cowboy,
+                    :logger,
+                    :httpoison]]
   end
 
   defp deps do
-    [{:credo, "~> 0.5", only: [:dev, :test]},
+    [{:cowboy, "~> 1.0.4"},
+     {:httpoison, "~> 0.10.0"},
+     {:credo, "~> 0.5", only: [:dev, :test]},
      {:mix_test_watch, "~> 0.2", only: :dev},
      {:excheck, "~> 0.5", only: :test},
      {:triq, github: "triqng/triq", only: :test}]

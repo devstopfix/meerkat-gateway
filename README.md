@@ -14,6 +14,18 @@ Features to be implemented:
 
 Master: [![Build Status](https://travis-ci.org/devstopfix/meerkat-gateway.svg?branch=master)](https://travis-ci.org/devstopfix/meerkat-gateway)
 
+# Run
+
+To test a simple HTTP GET returning *hello world*:
+
+    $ mix run --no-halt
+    $ curl -i http://localhost:8093
+    >
+    HTTP/1.1 200 OK
+    server: Cowboy
+    content-length: 12
+
+
 ### Hex (not yet available)
 
 If [available in Hex](https://hex.pm/docs/publish), the package can be installed as:
