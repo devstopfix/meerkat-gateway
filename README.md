@@ -12,6 +12,10 @@ Features to be implemented:
 
 ## Installation
 
+Master: [![Build Status](https://travis-ci.org/devstopfix/meerkat-gateway.svg?branch=master)](https://travis-ci.org/devstopfix/meerkat-gateway)
+
+### Hex (not yet available)
+
 If [available in Hex](https://hex.pm/docs/publish), the package can be installed as:
 
   1. Add `meerkat_gateway` to your list of dependencies in `mix.exs`:
