@@ -19,12 +19,15 @@ Master: [![Build Status](https://travis-ci.org/devstopfix/meerkat-gateway.svg?br
 To test a simple HTTP GET returning *hello world*:
 
     $ mix run --no-halt
-    $ curl -i http://localhost:8093
+    $ curl -i http://localhost:8093/api/mobile
     >
     HTTP/1.1 200 OK
     server: Cowboy
     content-length: 12
 
+To run a simple load test:
+
+    ab -n 100 -k http://localhost:8093/api/mobile
 
 ### Hex (not yet available)
 
