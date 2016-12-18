@@ -9,8 +9,9 @@ defmodule Meerkat.Server do
 
     def start(_type, _args) do
         dispatch = :cowboy_router.compile([{:_, [
-            {"/", Meerkat.Gateway.RequestHandler, []},
-            {"/fixture/[...]", :cowboy_static, {:dir, "public"}}]}])
+            {"/api/[...]", Meerkat.Gateway.RequestHandler, []},
+            {"/fixture/[...]", :cowboy_static, {:dir, "public",
+            [{:mimetypes, {"application", "json", []}}]}}]}])
         {:ok, _} = :cowboy.start_http(:http, 100,
                                       [port: 8093],
                                       [env: [dispatch: dispatch]])
