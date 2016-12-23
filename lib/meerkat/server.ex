@@ -20,7 +20,6 @@ defmodule Meerkat.Server do
         Meerkat.Gateway.Supervisor.start_link
     end
 
-    # TODO replace with application configuration
 #    defp bootstrap() do
 #      {:ok, pid} = Meerkat.Buckets.TokenBucket.start({2, :per, :second})
 #      Process.register(pid, :throttle)

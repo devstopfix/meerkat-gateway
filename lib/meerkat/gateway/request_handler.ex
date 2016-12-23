@@ -4,7 +4,7 @@ defmodule Meerkat.Gateway.RequestHandler do
   Process to handle a single HTTP request.
   """
 
-  alias Meerkat.Buckets.TokenBucket, as: TokenBucket
+#  alias Meerkat.Buckets.TokenBucket, as: TokenBucket
 
   def init(_transport, req, []) do
     {:ok, req, nil}
@@ -25,13 +25,16 @@ defmodule Meerkat.Gateway.RequestHandler do
 #    end
   end
 
+  @http_options [recv_timeout: 250]
+
+  @http_headers ["Accept": "Application/json"]
+
   @doc """
   Call the downstream API
   """
 
   def proxy_request(req) do
-    # TODO timeout
-    case HTTPoison.get("http://localhost:8093/fixture/200.json") do
+    case HTTPoison.get("http://localhost:8093/fixture/200.json", @http_headers, @http_options) do
       {:ok, %HTTPoison.Response{status_code: 200, body: body, headers: headers}} ->
         :cowboy_req.reply(200, headers, body, req)
       {:ok, %HTTPoison.Response{status_code: 404}} ->
