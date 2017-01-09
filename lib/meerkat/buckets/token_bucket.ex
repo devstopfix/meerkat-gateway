@@ -63,6 +63,24 @@ defmodule Meerkat.Buckets.TokenBucket do
     {:noreply, %{bucket | :tokens => Enum.max([0, max_tokens])}}
   end
 
+  # Calculate the refill rate
+
+  defp correct_refill_rate?(interval_ms, tokens, requests_per_second) do
+    requests_per_second == (1000.0 / interval_ms) * tokens
+  end
+
+  @doc """
+  Calculate all the combinations of refill rates that give us the correct
+  requests per second, and choose the one with the highest refill rate.
+  This gives us a fair distribution of tokens added over the second.
+  """
+
+  def calculate_refill_rate(requests_per_second) do
+    hd(for interval_ms <- 20..1000, tokens <- requests_per_second..1,
+      correct_refill_rate?(interval_ms, tokens, requests_per_second),
+      do: {:ok, interval_ms, tokens})
+  end
+
   @doc """
   Decrement n, minimum value is zero.
   """

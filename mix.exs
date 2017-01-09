@@ -3,7 +3,7 @@ defmodule MeerkatGateway.Mixfile do
 
   def project do
     [app: :meerkat_gateway,
-     version: "0.2.1",
+     version: "0.2.2",
      elixir: "~> 1.3",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
@@ -29,4 +29,5 @@ defmodule MeerkatGateway.Mixfile do
      {:excheck, "~> 0.5", only: :test},
      {:triq, github: "triqng/triq", only: :test}]
   end
+
 end
