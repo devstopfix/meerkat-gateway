@@ -29,6 +29,10 @@ To run a simple load test:
 
     ab -n 100 -k http://localhost:8093/api/mobile
 
+or run `curl` multiple times:
+
+    seq 3 | xargs -Iz curl http://localhost:8093/api/mobile
+
 ### Hex (not yet available)
 
 If [available in Hex](https://hex.pm/docs/publish), the package can be installed as:

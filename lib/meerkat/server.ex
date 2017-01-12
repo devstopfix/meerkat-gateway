@@ -12,7 +12,7 @@ defmodule Meerkat.Server do
             {"/fixture/[...]", :cowboy_static, {:dir, "public",
             [{:mimetypes, {"application", "json", []}}]}}]}])
 
-        #bootstrap()
+        bootstrap()
 
         {:ok, _} = :cowboy.start_http(:http, 100,
                                       [port: 8093],
@@ -20,9 +20,9 @@ defmodule Meerkat.Server do
         Meerkat.Gateway.Supervisor.start_link
     end
 
-#    defp bootstrap() do
-#      {:ok, pid} = Meerkat.Buckets.TokenBucket.start({2, :per, :second})
-#      Process.register(pid, :throttle)
-#    end
+    defp bootstrap() do
+      {:ok, pid} = Meerkat.Buckets.TokenBucket.start({2, :per, :second})
+      Process.register(pid, :throttle)
+    end
 
 end

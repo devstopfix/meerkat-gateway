@@ -47,7 +47,7 @@ defmodule Meerkat.Buckets.TokenBucketTest do
     end
   end
 
-  @tag iterations: 320
+  @tag iterations: 20
   property :calculate_refill_rate do
     for_all {requests_per_second} in {pos_integer} do
       {:ok, interval_ms, tokens_per_refill} = TokenBucket.calculate_refill_rate(requests_per_second)

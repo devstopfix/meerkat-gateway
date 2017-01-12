@@ -4,7 +4,7 @@ defmodule Meerkat.Gateway.RequestHandler do
   Process to handle a single HTTP request.
   """
 
-#  alias Meerkat.Buckets.TokenBucket, as: TokenBucket
+  alias Meerkat.Buckets.TokenBucket, as: TokenBucket
 
   def init(_transport, req, []) do
     {:ok, req, nil}
@@ -16,13 +16,13 @@ defmodule Meerkat.Gateway.RequestHandler do
 
   def handle(req, state) do
     self |> inspect |> IO.puts
-#    if TokenBucket.empty?(:throttle) do
-#      reply = :cowboy_req.reply(429, [], "TOO MANY REQUESTS", req)
-#      {:ok, reply, state}
-#    else
+    if TokenBucket.empty?(:throttle) do
+      reply = :cowboy_req.reply(429, [{"content-type", "text/plain"}], "TOO MANY REQUESTS", req)
+      {:ok, reply, state}
+    else
       {:ok, reply} = proxy_request(req);
       {:ok, reply, state};
-#    end
+    end
   end
 
   @http_options [recv_timeout: 250]

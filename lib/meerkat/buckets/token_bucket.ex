@@ -24,9 +24,11 @@ defmodule Meerkat.Buckets.TokenBucket do
   """
   def start(config, opts \\ [refill: true]) do
     {req, :per, :second} = config
+    {:ok, interval_ms, tokens} = calculate_refill_rate(req)
     bucket = %{:max_tokens => req,
                :tokens => req,
-               :interval_ms => s_to_ms(1),
+               :refill_tokens => tokens,
+               :interval_ms => interval_ms,
                :refill => opts[:refill]}
     GenServer.start(__MODULE__, bucket, opts)
   end
@@ -49,6 +51,12 @@ defmodule Meerkat.Buckets.TokenBucket do
 
   # Callbacks
 
+  @doc """
+  Each call to this function removes a token from the bucket.
+  Returns true if the bucket is not empty before the call is made,
+  otherwise false if empty.
+  """
+
   def handle_call(:empty, _from, bucket) do
     new_bucket = Map.update(bucket, :tokens, 0, &dec_to_zero/1)
     case Map.get(bucket, :tokens, 0) do
@@ -57,10 +65,19 @@ defmodule Meerkat.Buckets.TokenBucket do
     end
   end
 
+  @doc """
+  Add tokens to the bucket, and schedule the next refill.
+  """
+
   def handle_info(:refill, bucket) do
-    %{max_tokens: max_tokens, tokens: _, interval_ms: interval_ms} = bucket
+    %{max_tokens: max_tokens,
+     refill_tokens: refill_tokens,
+     tokens: tokens_in_bucket,
+     interval_ms: interval_ms} = bucket
     Process.send_after(self(), :refill, interval_ms)
-    {:noreply, %{bucket | :tokens => Enum.max([0, max_tokens])}}
+    more_tokens = Enum.min([tokens_in_bucket + refill_tokens, max_tokens])
+    IO.puts(inspect([tokens_in_bucket, more_tokens]))
+    {:noreply, %{bucket | :tokens => more_tokens}}
   end
 
   # Calculate the refill rate
@@ -91,10 +108,6 @@ defmodule Meerkat.Buckets.TokenBucket do
     else
       0
     end
-  end
-
-  defp s_to_ms(n) do
-    n * 1000
   end
 
 end
