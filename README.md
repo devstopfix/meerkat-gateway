@@ -1,24 +1,12 @@
-# Rate Limiting Plug
+# Rate Limit Plug
 
 [Plug](https://hexdocs.pm/plug/readme.html) giving requests per second rate limiting.
 
-Master: [![Build Status](https://travis-ci.org/devstopfix/meerkat-gateway.svg?branch=master)](https://travis-ci.org/devstopfix/meerkat-gateway)
+A resource can be protected by a pro-rata rate limit. For example a limit of 4 requests a second will allow a request every 250ms - you cannot use up all requests in the first few milliseconds of a period.
 
-# Run
+The response code returned when the limit is exceeded is [429 Too Many Requests](https://tools.ietf.org/html/rfc6585#section-4)
 
-To test a simple HTTP GET returning *hello world*:
-
-    $ mix run --no-halt
-    $ curl -i http://localhost:8093/api/mobile
-    >
-    HTTP/1.1 200 OK
-    server: Cowboy
-    content-length: 12
-
-To run a simple load test:
-
-    ab -n 100 -k http://localhost:8093/api/mobile
-
+Master: [![Build Status](https://travis-ci.org/devstopfix/plug-ratelimit.svg?branch=master)](https://travis-ci.org/devstopfix/plug-ratelimit)
 
 # Dev
 
@@ -39,3 +27,4 @@ Exercise:
 
     curl http://localhost:4000/
 
+    ab -n 4 http://127.0.0.1:4000/
