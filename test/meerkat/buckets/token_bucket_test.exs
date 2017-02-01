@@ -1,10 +1,10 @@
-defmodule Meerkat.Buckets.TokenBucketTest do
+defmodule Buckets.TokenBucketTest do
 
   use ExUnit.Case, async: true
   use ExCheck
-  doctest Meerkat.Buckets.TokenBucket
+  doctest Buckets.TokenBucket
 
-  alias Meerkat.Buckets.TokenBucket, as: TokenBucket
+  alias Buckets.TokenBucket, as: TokenBucket
 
   test "Bucket with zero rate limit is empty" do
     {:ok, pid} = TokenBucket.start({0, :per, :second}, [refill: false])
