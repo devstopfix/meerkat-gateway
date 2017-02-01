@@ -6,7 +6,7 @@ defmodule Plug.Ratelimit do
 
   import Plug.Conn
   #alias Plug.Conn
-  alias Meerkat.Buckets.TokenBucket, as: TokenBucket
+  alias Buckets.TokenBucket, as: TokenBucket
 
   def init(_opts) do
     {:ok, pid} = TokenBucket.start({4, :per, :second}, [refill: false])

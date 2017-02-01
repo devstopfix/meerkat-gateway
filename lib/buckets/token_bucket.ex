@@ -1,4 +1,4 @@
-defmodule Meerkat.Buckets.TokenBucket do
+defmodule Buckets.TokenBucket do
   @moduledoc """
   A Token Bucket fills with tokens at a regular rate, up until a preset limit.
   Another process may ask if the bucket is empty or not. Each empty request
