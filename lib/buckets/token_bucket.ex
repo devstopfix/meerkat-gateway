@@ -1,4 +1,4 @@
-defmodule Meerkat.Buckets.TokenBucket do
+defmodule Buckets.TokenBucket do
   @moduledoc """
   A Token Bucket fills with tokens at a regular rate, up until a preset limit.
   Another process may ask if the bucket is empty or not. Each empty request
@@ -56,7 +56,6 @@ defmodule Meerkat.Buckets.TokenBucket do
   Returns true if the bucket is not empty before the call is made,
   otherwise false if empty.
   """
-
   def handle_call(:empty, _from, bucket) do
     new_bucket = Map.update(bucket, :tokens, 0, &dec_to_zero/1)
     case Map.get(bucket, :tokens, 0) do
@@ -76,7 +75,6 @@ defmodule Meerkat.Buckets.TokenBucket do
      interval_ms: interval_ms} = bucket
     Process.send_after(self(), :refill, interval_ms)
     more_tokens = Enum.min([tokens_in_bucket + refill_tokens, max_tokens])
-    IO.puts(inspect([tokens_in_bucket, more_tokens]))
     {:noreply, %{bucket | :tokens => more_tokens}}
   end
 
