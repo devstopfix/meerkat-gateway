@@ -1,16 +1,6 @@
-# Meerkat Gateway
+# Rate Limiting Plug
 
-Simple API Gateway. 
-
-Features to be implemented:
-
-* per-second rate limiting
-* mandatory HTTP headers
-* forbidden HTTP headers
-* JSON threat protection
-* XML threat protection
-
-## Installation
+[Plug](https://hexdocs.pm/plug/readme.html) giving requests per second rate limiting.
 
 Master: [![Build Status](https://travis-ci.org/devstopfix/meerkat-gateway.svg?branch=master)](https://travis-ci.org/devstopfix/meerkat-gateway)
 
@@ -29,23 +19,23 @@ To run a simple load test:
 
     ab -n 100 -k http://localhost:8093/api/mobile
 
-### Hex (not yet available)
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed as:
+# Dev
 
-  1. Add `meerkat_gateway` to your list of dependencies in `mix.exs`:
+Start REPL:
 
-    ```elixir
-    def deps do
-      [{:meerkat_gateway, "~> 0.1.0"}]
-    end
-    ```
+    iex -S mix
 
-  2. Ensure `meerkat_gateway` is started before your application:
 
-    ```elixir
-    def application do
-      [applications: [:meerkat_gateway]]
-    end
-    ```
+Load plug:
+
+```elixir
+c "lib/plug/ratelimit.ex"
+{:ok, _} = Plug.Adapters.Cowboy.http Plug.Ratelimit, []
+
+```
+
+Exercise:
+
+    curl http://localhost:4000/
 
