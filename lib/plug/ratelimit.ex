@@ -5,11 +5,19 @@ defmodule Plug.Ratelimit do
   """
 
   import Plug.Conn
-  #alias Plug.Conn
+
   alias Buckets.TokenBucket, as: TokenBucket
 
-  def init(_opts) do
-    {:ok, pid} = TokenBucket.start({4, :per, :second}, [refill: false])
+  @doc """
+  MUST have a keyword of the form:
+
+      [limit:, {x, :per, :second}]
+
+  where x is a positive integer.
+  """
+  def init(opts) do
+    {:ok, limit} = Keyword.fetch(opts, :limit)
+    {:ok, pid} = TokenBucket.start(limit)
     {pid}
   end
 
