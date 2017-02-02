@@ -12,15 +12,15 @@ defmodule Buckets.TokenBucket do
   @doc """
   Create a Token Bucket process that allows 10 requests per second:
 
-      {:ok, pid} = Meerkat.Buckets.TokenBucket.start({10, :per, :second})
-      Meerkat.Buckets.TokenBucket.empty?(pid)
+      {:ok, pid} = Buckets.TokenBucket.start({10, :per, :second})
+      Buckets.TokenBucket.empty?(pid)
 
   By default the bucket will refill itself. To disable refill for testing:
 
-      {:ok, pid} = Meerkat.Buckets.TokenBucket.start({2, :per, :second}, [refill: false])
-      false = Meerkat.Buckets.TokenBucket.empty?(pid)
-      false = Meerkat.Buckets.TokenBucket.empty?(pid)
-      true  = Meerkat.Buckets.TokenBucket.empty?(pid)
+      {:ok, pid} = Buckets.TokenBucket.start({2, :per, :second}, [refill: false])
+      false = Buckets.TokenBucket.empty?(pid)
+      false = Buckets.TokenBucket.empty?(pid)
+      true  = Buckets.TokenBucket.empty?(pid)
   """
   def start(config, opts \\ [refill: true]) do
     {req, :per, :second} = config
