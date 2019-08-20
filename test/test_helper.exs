@@ -1,2 +1,1 @@
 ExUnit.start()
-ExCheck.start([], [])

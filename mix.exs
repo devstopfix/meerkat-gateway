@@ -11,7 +11,7 @@ defmodule PlugRateLimit.Mixfile do
   end
 
   def application do
-    [applications: [:sasl, :logger, :cowboy, :plug]]
+    [applications: [:logger, :cowboy, :plug, :stream_data]]
   end
 
   defp deps do
@@ -19,8 +19,7 @@ defmodule PlugRateLimit.Mixfile do
      {:plug, "~> 1.0"},
      {:credo, "~> 1.1", only: [:dev, :test]},
      {:mix_test_watch, "~> 0.2", only: :dev},
-     {:excheck, git: "https://github.com/devstopfix/excheck.git", tag: "0.7.6", only: :test},
-     {:triq, "~> 1.3", only: [:dev, :test]}]
+     {:stream_data, "~> 0.4", only: [:dev, :test]}]
   end
 
 end
