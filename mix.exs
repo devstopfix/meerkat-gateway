@@ -3,8 +3,8 @@ defmodule PlugRateLimit.Mixfile do
 
   def project do
     [app: :plug_ratelimit,
-     version: "1.0.0",
-     elixir: "~> 1.3",
+     version: "0.19.232",
+     elixir: "~> 1.6",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
      deps: deps()]
