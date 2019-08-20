@@ -11,13 +11,10 @@ Master: [![Build Status](https://travis-ci.org/devstopfix/plug-ratelimit.svg?bra
 
 # Example
 
-There is an example app in [example/demo.ex](example/demo.ex). To run:
+There is an example app in [example/demo.exs](example/demo.exs). To run:
 
-```elixir
-iex -S mix
-
-c "example/demo.ex"
-{:ok, _} = Plug.Adapters.Cowboy.http Demo, []
+```bash
+mix run --no-halt example/demo.exs
 ```
 
 Then call enough times to exceed the 4 req/sec limit:
