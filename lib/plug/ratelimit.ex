@@ -1,5 +1,4 @@
 defmodule Plug.Ratelimit do
-
   @moduledoc """
   A plug that enforces rate limiting (requests per second)
   """
@@ -23,7 +22,7 @@ defmodule Plug.Ratelimit do
 
   def call(conn, {bucket}) do
     case TokenBucket.empty?(bucket) do
-      true  -> too_many_requests(conn)
+      true -> too_many_requests(conn)
       false -> conn
     end
   end
@@ -33,5 +32,4 @@ defmodule Plug.Ratelimit do
     |> send_resp(429, "Too Many Requests")
     |> halt
   end
-
 end

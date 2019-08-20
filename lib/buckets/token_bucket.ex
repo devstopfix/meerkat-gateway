@@ -25,11 +25,15 @@ defmodule Buckets.TokenBucket do
   def start(config, opts \\ [refill: true]) do
     {req, :per, :second} = config
     {:ok, interval_ms, tokens} = calculate_refill_rate(req)
-    bucket = %{:max_tokens => req,
-               :tokens => req,
-               :refill_tokens => tokens,
-               :interval_ms => interval_ms,
-               :refill => opts[:refill]}
+
+    bucket = %{
+      :max_tokens => req,
+      :tokens => req,
+      :refill_tokens => tokens,
+      :interval_ms => interval_ms,
+      :refill => opts[:refill]
+    }
+
     GenServer.start(__MODULE__, bucket, opts)
   end
 
@@ -37,6 +41,7 @@ defmodule Buckets.TokenBucket do
     unless Map.get(state, :refill) == false do
       Process.send(self(), :refill, [])
     end
+
     {:ok, Map.delete(state, :refill)}
   end
 
@@ -58,9 +63,10 @@ defmodule Buckets.TokenBucket do
   """
   def handle_call(:empty, _from, bucket) do
     new_bucket = Map.update(bucket, :tokens, 0, &dec_to_zero/1)
+
     case Map.get(bucket, :tokens, 0) do
-      0   -> {:reply, true, new_bucket}
-      _   -> {:reply, false, new_bucket}
+      0 -> {:reply, true, new_bucket}
+      _ -> {:reply, false, new_bucket}
     end
   end
 
@@ -69,10 +75,13 @@ defmodule Buckets.TokenBucket do
   """
 
   def handle_info(:refill, bucket) do
-    %{max_tokens: max_tokens,
-     refill_tokens: refill_tokens,
-     tokens: tokens_in_bucket,
-     interval_ms: interval_ms} = bucket
+    %{
+      max_tokens: max_tokens,
+      refill_tokens: refill_tokens,
+      tokens: tokens_in_bucket,
+      interval_ms: interval_ms
+    } = bucket
+
     Process.send_after(self(), :refill, interval_ms)
     more_tokens = Enum.min([tokens_in_bucket + refill_tokens, max_tokens])
     {:noreply, %{bucket | :tokens => more_tokens}}
@@ -81,7 +90,7 @@ defmodule Buckets.TokenBucket do
   # Calculate the refill rate
 
   defp correct_refill_rate?(interval_ms, tokens, requests_per_second) do
-    requests_per_second == (1000.0 / interval_ms) * tokens
+    requests_per_second == 1000.0 / interval_ms * tokens
   end
 
   @doc """
@@ -91,9 +100,12 @@ defmodule Buckets.TokenBucket do
   """
 
   def calculate_refill_rate(requests_per_second) do
-    hd(for interval_ms <- 20..1000, tokens <- requests_per_second..1,
-      correct_refill_rate?(interval_ms, tokens, requests_per_second),
-      do: {:ok, interval_ms, tokens})
+    hd(
+      for interval_ms <- 20..1000,
+          tokens <- requests_per_second..1,
+          correct_refill_rate?(interval_ms, tokens, requests_per_second),
+          do: {:ok, interval_ms, tokens}
+    )
   end
 
   @doc """
@@ -107,5 +119,4 @@ defmodule Buckets.TokenBucket do
       0
     end
   end
-
 end
