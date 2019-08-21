@@ -9,7 +9,7 @@ The response code when the limit is exceeded is [429 Too Many Requests](https://
 Master: [![Build Status](https://travis-ci.org/devstopfix/plug-ratelimit.svg?branch=master)](https://travis-ci.org/devstopfix/plug-ratelimit)
 
 
-# Example
+## Example
 
 There is an example app in [example/demo.exs](example/demo.exs). To run:
 
@@ -29,7 +29,7 @@ seq 5 | xargs -Iz curl -w " %{http_code}\n" http://localhost:4000/
   Too Many Requests 429
 ```
 
-# Dev
+### Dev
 
 Start REPL:
 
@@ -51,3 +51,8 @@ Exercise:
 or run `curl` multiple times:
 
     seq 5 | xargs -Iz curl http://localhost:4000/
+
+
+## Credits
+
+* This library uses a Stern-Brocot tree to find a good ratio of the number of tokens to add to the bucket at a given interval - this ratio is a variation of the algorithm described in [John D. Cook's Best rational approximation](https://www.johndcook.com/blog/2010/10/20/best-rational-approximation/)

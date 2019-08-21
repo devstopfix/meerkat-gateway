@@ -10,13 +10,12 @@ defmodule Plug.Ratelimit do
   @doc """
   MUST have a keyword of the form:
 
-      [limit:, {x, :per, :second}]
+      [limit:, [requests_per_second: x]]
 
   where x is a positive integer.
   """
-  def init(opts) do
-    {:ok, limit} = Keyword.fetch(opts, :limit)
-    {:ok, pid} = TokenBucket.start(limit)
+  def init(args) do
+    {:ok, pid} = TokenBucket.start(args)
     {pid}
   end
 

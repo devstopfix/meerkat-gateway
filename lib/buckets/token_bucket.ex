@@ -9,40 +9,32 @@ defmodule Buckets.TokenBucket do
 
   use GenServer
 
+  alias Buckets.SternBrocot
+
   @doc """
   Create a Token Bucket process that allows 10 requests per second:
 
-      {:ok, pid} = Buckets.TokenBucket.start({10, :per, :second})
+      {:ok, pid} = Buckets.TokenBucket.start([requests_per_second: 10])
       Buckets.TokenBucket.empty?(pid)
 
-  By default the bucket will refill itself. To disable refill for testing:
-
-      {:ok, pid} = Buckets.TokenBucket.start({2, :per, :second}, [refill: false])
-      false = Buckets.TokenBucket.empty?(pid)
-      false = Buckets.TokenBucket.empty?(pid)
-      true  = Buckets.TokenBucket.empty?(pid)
   """
-  def start(config, opts \\ [refill: true]) do
-    {req, :per, :second} = config
-    {:ok, interval_ms, tokens} = calculate_refill_rate(req)
-
-    bucket = %{
-      :max_tokens => req,
-      :tokens => req,
-      :refill_tokens => tokens,
-      :interval_ms => interval_ms,
-      :refill => opts[:refill]
-    }
-
-    GenServer.start(__MODULE__, bucket, opts)
+  def start([requests_per_second: _] = args, opts \\ []) do
+    GenServer.start(__MODULE__, args, opts)
   end
 
-  def init(state) do
-    unless Map.get(state, :refill) == false do
-      Process.send(self(), :refill, [])
-    end
+  def init(requests_per_second: rps) do
+    [tokens: tokens, interval_ms: interval_ms] = SternBrocot.find(rps)
 
-    {:ok, Map.delete(state, :refill)}
+    bucket = %{
+      :max_tokens => rps,
+      :tokens => rps,
+      :refill_tokens => tokens,
+      :interval_ms => interval_ms
+    }
+
+    Process.send_after(self(), :refill, interval_ms)
+
+    {:ok, bucket}
   end
 
   @doc """
@@ -85,27 +77,6 @@ defmodule Buckets.TokenBucket do
     Process.send_after(self(), :refill, interval_ms)
     more_tokens = Enum.min([tokens_in_bucket + refill_tokens, max_tokens])
     {:noreply, %{bucket | :tokens => more_tokens}}
-  end
-
-  # Calculate the refill rate
-
-  defp correct_refill_rate?(interval_ms, tokens, requests_per_second) do
-    requests_per_second == 1000.0 / interval_ms * tokens
-  end
-
-  @doc """
-  Calculate all the combinations of refill rates that give us the correct
-  requests per second, and choose the one with the highest refill rate.
-  This gives us a fair distribution of tokens added over the second.
-  """
-
-  def calculate_refill_rate(requests_per_second) do
-    hd(
-      for interval_ms <- 20..1000,
-          tokens <- requests_per_second..1,
-          correct_refill_rate?(interval_ms, tokens, requests_per_second),
-          do: {:ok, interval_ms, tokens}
-    )
   end
 
   @doc """

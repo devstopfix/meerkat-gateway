@@ -3,7 +3,7 @@ defmodule PlugRateLimit.Mixfile do
 
   def project do
     [app: :plug_ratelimit,
-     version: "0.19.232",
+     version: "0.19.233",
      elixir: "~> 1.6",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
@@ -18,7 +18,6 @@ defmodule PlugRateLimit.Mixfile do
     [{:cowboy, "~> 1.0.4"},
      {:plug, "~> 1.0"},
      {:credo, "~> 1.1", only: [:dev, :test]},
-     {:mix_test_watch, "~> 0.2", only: :dev},
      {:stream_data, "~> 0.4", only: [:dev, :test]}]
   end
 

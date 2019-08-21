@@ -1,18 +1,13 @@
 defmodule Buckets.TokenBucketTest do
   use ExUnit.Case, async: false
   use ExUnitProperties
-  # doctest Buckets.TokenBucket
 
-  alias Buckets.TokenBucket, as: TokenBucket
-
-  test "Bucket with zero rate limit is empty" do
-    {:ok, pid} = TokenBucket.start({0, :per, :second}, refill: false)
-    assert TokenBucket.empty?(pid)
-  end
+  alias Buckets.TokenBucket
+  alias Buckets.SternBrocot
 
   property "bucket_of_size_n_has_n_tokens" do
     check all(n <- StreamData.positive_integer()) do
-      {:ok, pid} = TokenBucket.start({n, :per, :second}, refill: false)
+      {:ok, pid} = TokenBucket.start([requests_per_second: n], refill: false)
       Enum.map(Range.new(1, n), fn _ -> refute TokenBucket.empty?(pid) end)
       assert TokenBucket.empty?(pid)
     end
@@ -20,7 +15,7 @@ defmodule Buckets.TokenBucketTest do
 
   property "buckets_get_emptied_and_refilled" do
     check all(n <- StreamData.positive_integer()) do
-      {:ok, pid} = TokenBucket.start({n, :per, :second}, refill: false)
+      {:ok, pid} = TokenBucket.start([requests_per_second: n], refill: false)
       Enum.map(Range.new(1, n), fn _ -> refute TokenBucket.empty?(pid) end)
       assert TokenBucket.empty?(pid), "Not all tokens drained"
       :ok = Process.send(pid, :refill, [])
@@ -32,7 +27,7 @@ defmodule Buckets.TokenBucketTest do
 
   property :calculate_refill_rate_always_adds_tokens do
     check all(requests_per_second <- StreamData.positive_integer()) do
-      {:ok, _, tokens} = TokenBucket.calculate_refill_rate(requests_per_second)
+      [tokens: tokens, interval_ms: _] = SternBrocot.find(requests_per_second)
       assert tokens > 0
       assert tokens <= requests_per_second
     end
@@ -40,16 +35,16 @@ defmodule Buckets.TokenBucketTest do
 
   property :calculate_refill_rate_interval_is_at_least_50_fps do
     check all(requests_per_second <- StreamData.positive_integer()) do
-      {:ok, interval_ms, _} = TokenBucket.calculate_refill_rate(requests_per_second)
-      assert interval_ms >= 20
+      [tokens: _, interval_ms: interval_ms] = SternBrocot.find(requests_per_second)
+      assert interval_ms >= 1
       assert interval_ms <= 1000
     end
   end
 
   property :calculate_refill_rate do
     check all(requests_per_second <- StreamData.positive_integer()) do
-      {:ok, interval_ms, tokens_per_refill} =
-        TokenBucket.calculate_refill_rate(requests_per_second)
+      [tokens: tokens_per_refill, interval_ms: interval_ms] =
+        SternBrocot.find(requests_per_second)
 
       tokens_in_bucket_after_1_second =
         trunc(Float.ceil(1000.0 / interval_ms)) * tokens_per_refill

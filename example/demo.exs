@@ -12,7 +12,7 @@ defmodule Demo do
 
   use Plug.Router
 
-  plug(Plug.Ratelimit, limit: {4, :per, :second})
+  plug(Plug.Ratelimit, requests_per_second: 4)
   plug(:match)
   plug(:dispatch)
 

@@ -6,3 +6,5 @@ erl_crash.dump
 .idea/
 
 *.beam
+
+example/chart_refill.exs
