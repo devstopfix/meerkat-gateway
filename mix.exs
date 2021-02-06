@@ -4,7 +4,7 @@ defmodule PlugRateLimit.Mixfile do
   def project do
     [
       app: :plug_ratelimit,
-      version: "0.21.37",
+      version: "0.21.38",
       description: "Plug with request/second rate limiting",
       elixir: "~> 1.10",
       deps: deps(),
@@ -20,8 +20,7 @@ defmodule PlugRateLimit.Mixfile do
 
   defp deps do
     [
-      {:cowboy, "~> 1.1"},
-      {:plug, "~> 1.11"},
+      {:plug_cowboy, "~> 2.0"},
       {:credo, "~> 1.5", only: [:dev, :test]},
       {:ex_doc, "~> 0.23", only: :dev, runtime: false},
       {:stream_data, "~> 0.5", only: [:dev, :test]}

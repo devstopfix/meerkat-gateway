@@ -16,19 +16,11 @@ defmodule Demo do
   plug(:match)
   plug(:dispatch)
 
-  def init(options) do
-    options
-  end
+  def init(options), do: options
 
-  get "/" do
-    conn
-    |> send_resp(200, "OK")
-    |> halt
-  end
+  get("/", do: send_resp(conn, 204, ""))
 
-  match _ do
-    send_resp(conn, 404, "Not Found")
-  end
+  match(_, do: send_resp(conn, 404, "Not Found"))
 end
 
 {:ok, _} = Plug.Adapters.Cowboy.http(Demo, [])

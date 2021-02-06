@@ -40,14 +40,14 @@ Load plug:
 
 ```elixir
 c "lib/plug/ratelimit.ex"
-{:ok, _} = Plug.Adapters.Cowboy.http Plug.Ratelimit, []
+{:ok, _} = Plug.Adapters.Cowboy.http Plug.Ratelimit, [requests_per_second: 4]
 ```
 
 Exercise:
 
     curl http://localhost:4000/
 
-    ab -n 4 http://127.0.0.1:4000/
+    ab -n 5 http://127.0.0.1:4000/
 
 or run `curl` multiple times:
 
