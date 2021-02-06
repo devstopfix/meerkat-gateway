@@ -8,14 +8,15 @@ defmodule Plug.Ratelimit do
   alias Buckets.TokenBucket, as: TokenBucket
 
   @doc """
-  MUST have a keyword of the form:
+  args MUST have a keyword of the form:
 
-      [limit:, [requests_per_second: x]]
+      [requests_per_second: x]
 
   where x is a positive integer.
   """
   def init(args) do
-    {:ok, pid} = TokenBucket.start(args)
+    requests_per_second = Keyword.get(args, :requests_per_second)
+    {:ok, pid} = TokenBucket.start(requests_per_second)
     {pid}
   end
 

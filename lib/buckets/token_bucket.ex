@@ -14,15 +14,16 @@ defmodule Buckets.TokenBucket do
   @doc """
   Create a Token Bucket process that allows 10 requests per second:
 
-      {:ok, pid} = Buckets.TokenBucket.start([requests_per_second: 10])
+      {:ok, pid} = Buckets.TokenBucket.start(10)
       Buckets.TokenBucket.empty?(pid)
 
   """
-  def start([requests_per_second: _] = args, opts \\ []) do
+  def start(args, opts \\ []) do
     GenServer.start(__MODULE__, args, opts)
   end
 
-  def init(requests_per_second: rps) do
+  @spec init(pos_integer) :: {:ok, map}
+  def init(rps) when is_integer(rps) and rps > 0 do
     [tokens: tokens, interval_ms: interval_ms] = SternBrocot.find(rps)
 
     bucket = %{
