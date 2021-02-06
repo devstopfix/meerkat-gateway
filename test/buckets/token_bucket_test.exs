@@ -2,8 +2,8 @@ defmodule Buckets.TokenBucketTest do
   use ExUnit.Case, async: false
   use ExUnitProperties
 
-  alias Buckets.TokenBucket
   alias Buckets.SternBrocot
+  alias Buckets.TokenBucket
 
   property "bucket_of_size_n_has_n_tokens" do
     check all(n <- StreamData.positive_integer()) do
