@@ -7,6 +7,7 @@ defmodule Buckets.SternBrocot do
   -- https://en.wikipedia.org/wiki/Stern%E2%80%93Brocot_tree
   """
 
+  @spec find(pos_integer) :: [tokens: pos_integer, interval_ms: pos_integer]
   def find(requests_per_second)
       when is_integer(requests_per_second) and requests_per_second >= 1 do
     {n, d} = find(requests_per_second / 1000.0, {0, 1}, {1, 0})

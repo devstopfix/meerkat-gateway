@@ -5,6 +5,8 @@ defmodule Buckets.TokenBucketTest do
   alias Buckets.SternBrocot
   alias Buckets.TokenBucket
 
+  @max_runs 1_000
+
   describe "Bucket" do
     property "of size n has n tokens" do
       check all(n <- StreamData.positive_integer()) do
@@ -39,15 +41,17 @@ defmodule Buckets.TokenBucketTest do
 
   describe "calculate_refill_rate" do
     property :calculate_refill_rate_always_adds_tokens do
-      check all(requests_per_second <- StreamData.positive_integer()) do
-        [tokens: tokens, interval_ms: _] = SternBrocot.find(requests_per_second)
+      check all(requests_per_second <- StreamData.positive_integer(), max_runs: @max_runs) do
+        [tokens: tokens, interval_ms: interval_ms] = SternBrocot.find(requests_per_second)
         assert tokens > 0
         assert tokens <= requests_per_second
+        assert is_integer(tokens)
+        assert is_integer(interval_ms)
       end
     end
 
     property :calculate_refill_rate_interval_is_at_least_50_fps do
-      check all(requests_per_second <- StreamData.positive_integer()) do
+      check all(requests_per_second <- StreamData.positive_integer(), max_runs: @max_runs) do
         [tokens: _, interval_ms: interval_ms] = SternBrocot.find(requests_per_second)
         assert interval_ms >= 1
         assert interval_ms <= 1000
@@ -55,7 +59,7 @@ defmodule Buckets.TokenBucketTest do
     end
 
     property :calculate_refill_rate do
-      check all(requests_per_second <- StreamData.positive_integer()) do
+      check all(requests_per_second <- StreamData.positive_integer(), max_runs: @max_runs) do
         [tokens: tokens_per_refill, interval_ms: interval_ms] =
           SternBrocot.find(requests_per_second)
 

@@ -42,7 +42,7 @@ defmodule Buckets.TokenBucket do
   Returns true if the bucket is empty, otherwise false.
   Removes a token from the bucket after the test.
   """
-
+  @spec empty?(pid) :: boolean
   def empty?(pid) do
     GenServer.call(pid, :empty)
   end
@@ -83,7 +83,7 @@ defmodule Buckets.TokenBucket do
   @doc """
   Decrement n, minimum value is zero.
   """
-
+  @spec dec_to_zero(integer) :: non_neg_integer
   def dec_to_zero(n) do
     if n > 0 do
       n - 1

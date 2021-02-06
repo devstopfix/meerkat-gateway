@@ -2,13 +2,21 @@
 
 [Elixir](http://elixir-lang.org/) [Plug](https://hexdocs.pm/plug/readme.html) giving requests per second rate limiting capability.
 
-A resource can be protected by a pro-rata rate limit. For example a limit of 4 requests a second will allow a request every 250ms - you cannot use up all requests in the first few milliseconds of a period.
+A resource can be protected by a pro-rata rate limit. For example a limit of 4 requests a second will allow a request every 250ms - you cannot use up all requests in the first few milliseconds of a period. Note this applies to the entire router - the library needs to be extended to handle individual paths.
 
 The response code when the limit is exceeded is [429 Too Many Requests](https://tools.ietf.org/html/rfc6585#section-4). This plug uses the [Token Bucket Algorithm](https://en.wikipedia.org/wiki/Token_bucket).
 
 [![Build Status](https://github.com/devstopfix/plug-ratelimit/workflows/ci/badge.svg)](https://github.com/devstopfix/plug-ratelimit/actions)
 [![Hex.pm](https://img.shields.io/hexpm/v/plug_ratelimit.svg?style=flat-square)](https://hex.pm/packages/plug_ratelimit)
 
+
+## Install
+
+Add `:plug_ratelimit` to your list of dependencies in mix.exs:
+
+```elixir
+  {:plug_ratelimit, "~> 0.21"}
+```
 
 ## Example
 
