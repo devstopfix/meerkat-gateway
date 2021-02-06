@@ -6,7 +6,8 @@ A resource can be protected by a pro-rata rate limit. For example a limit of 4 r
 
 The response code when the limit is exceeded is [429 Too Many Requests](https://tools.ietf.org/html/rfc6585#section-4). This plug uses the [Token Bucket Algorithm](https://en.wikipedia.org/wiki/Token_bucket).
 
-Master: [![Build Status](https://travis-ci.org/devstopfix/plug-ratelimit.svg?branch=master)](https://travis-ci.org/devstopfix/plug-ratelimit)
+[![Build Status](https://github.com/devstopfix/xml_builder/workflows/mix/badge.svg)](https://github.com/devstopfix/plug-ratelimit/actions)
+[![Hex.pm](https://img.shields.io/hexpm/v/gnuplot.svg?style=flat-square)](https://hex.pm/packages/plug_ratelimit)
 
 
 ## Example

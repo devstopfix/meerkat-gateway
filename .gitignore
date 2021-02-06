@@ -5,6 +5,8 @@ erl_crash.dump
 *.ez
 .idea/
 
+/doc
+
 *.beam
 
 example/chart_refill.exs
